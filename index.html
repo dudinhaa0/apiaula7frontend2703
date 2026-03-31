@@ -188,8 +188,8 @@
         const categoriaTitulo = document.getElementById('categoria-titulo');
         let categoriasData = [];
         let categoriaAtivaId = null;
-        //Função para buscar categorias (FETCH)
 
+        //Função para buscar categorias (FETCH)
         async function carregarCategorias() {
             try {
                 const response = await fetch(`${API_URL}/categorias`);
@@ -197,7 +197,7 @@
                 renderizarBotoesCategorias();
                 //seleciona a 1º categoria automatico
                 if (categoriasData.length > 0) {
-                    selecionarCategorias(categoriasData[0].id, categoriasData[0].nome);
+                    selecionarCategoria(categoriasData[0].id, categoriasData[0].nome);
                 }
             }catch (error) {
                console.error('Erro ao carregar categorias:', error);
@@ -212,9 +212,9 @@
                 const btn = document.createElement('button');
                     btn.className = `snap-start px-4 py-4 py-1 rounded-full font-bold text-sm transition-all duration-150 cursor-pointer flex-shrink-0 btn-cat`;
                     btn.innerText = cat.nome;
-                    btn.onclick = () => selecionarCategorias(cat.id, cat.nome);
+                    btn.onclick = () => selecionarCategoria(cat.id, cat.nome);
                     btn.dataset.id = cat.id;
-                    navCategorias.id = cat.id;
+                    navCategorias.appendChild(btn);
                 
             });
         }
@@ -237,6 +237,22 @@
             carregarProdutos(id);
 
         }
+        async function carregarProdutos(categoriaId){
+            listaProdutos.innerHTML = `
+            <div class="col-span-2 py-10 flex justify-center">
+                <div class="animate-spin rounded-full h-8 w-8
+                border-b-2 border-primary"></div>
+                </div>
+                `;
+                try{
+                    const response = await fetch(`${API_URL}/produtos?categoriaId=${categoriaId}`);
+                    const produtos = await response.json();
+                    renderizarProdutos(produtos);
+                }catch (error){
+                    console.error('Erro ao carregar produtos:', error);
+                    listaProdutos.innerHTML = '<p class="col-span-2 text-red-500">Erro ao carregar produtos. </p>';
+                }
+                }
         carregarCategorias();
     </script>
 
